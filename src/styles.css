@@ -1,7 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Karla&display=swap");
 * {
   margin: 0;
   box-sizing: border-box;
-  overflow: hidden;
+  font-family: karla, sans-serif;
 }
 
 /* Button */
@@ -32,4 +33,41 @@
 }
 .welcome .btn {
   margin-top: 1.5em;
+}
+
+/* Questions */
+.questions {
+  margin: 2em 10em;
+}
+.item {
+  color: #363e6d;
+  padding: 0.5em 1em;
+}
+.options {
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 1em;
+  width: auto;
+}
+.option {
+  margin-left: 4em;
+  border: 1px solid #aab2d1;
+  padding: 0.5em 1em;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.submit {
+  display: block;
+  margin: auto;
+  margin-top: 5em;
+}
+
+@media screen and (max-width: 776px) {
+  .option {
+    font-size: 12px;
+    margin-left: 1em;
+  }
+  .questions {
+    margin: 2em 5em;
+  }
 }
