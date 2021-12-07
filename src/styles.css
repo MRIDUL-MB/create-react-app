@@ -46,8 +46,8 @@
 .options {
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
   column-gap: 1em;
-  width: auto;
 }
 .option {
   margin-left: 4em;
@@ -55,6 +55,7 @@
   padding: 0.5em 1em;
   border-radius: 10px;
   cursor: pointer;
+  display: flex;
 }
 .submit {
   display: block;
@@ -66,8 +67,17 @@
   .option {
     font-size: 12px;
     margin-left: 1em;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
   .questions {
-    margin: 2em 5em;
+    margin: 2em;
   }
+}
+
+input[type="radio"] {
+  display: none;
+}
+.selected {
+  background-color: #d6dbf5;
 }
