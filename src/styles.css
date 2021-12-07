@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Button */
+.btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  background-color: #4d5b9e;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* Welcome */
+.welcome {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 1em;
+}
+.welcome h1 {
+  font-size: 3em;
+  color: #2c3566;
+}
+.welcome p {
+  font-size: 1.25rem;
+}
+.welcome .btn {
+  margin-top: 1.5em;
+}
