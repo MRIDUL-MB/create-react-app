@@ -5,6 +5,9 @@ export default function Question() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [correctAnswer, setCorrectAnswer] = useState([]);
+  const [count, setCount] = useState(0);
+  const [play, setPlay] = useState(false);
+  const [reset, setReset] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -30,7 +33,7 @@ export default function Question() {
       )
       .catch((err) => console.log(err))
       .finally(setLoading(false));
-  }, []);
+  }, [reset]);
 
   useEffect(() => {
     setCorrectAnswer(data.map((item) => item.correct_answer));
@@ -56,31 +59,39 @@ export default function Question() {
   }
 
   function handleSubmit() {
-    setData((prev) => {
-      return prev.map((item) => ({
-        ...item,
-        answers: item.answers.map((ans, index) => {
-          return ans.answer === item.correct_answer
-            ? { ...ans, isCorrected: !ans.isCorrected, isWrong: ans.isSelected }
-            : { ...ans, isWrong: ans.isSelected };
-        })
-      }));
-    });
+    if (play) {
+      setReset(true);
+      setPlay(false);
+    } else {
+      setData((prev) => {
+        return prev.map((item) => ({
+          ...item,
+          answers: item.answers.map((ans, index) => {
+            return ans.answer === item.correct_answer
+              ? {
+                  ...ans,
+                  isCorrected: !ans.isCorrected,
+                  isWrong: ans.isSelected
+                }
+              : { ...ans, isWrong: ans.isSelected };
+          })
+        }));
+      });
 
-    const newArray = data.map((item) =>
-      item.answers.map((ans) => ans.isSelected === true && ans.answer)
-    );
+      const newArray = data.map((item) =>
+        item.answers.map((ans) => ans.isSelected === true && ans.answer)
+      );
 
-    const answerArray = newArray.map((item) =>
-      item.find((ans) => ans !== false)
-    );
-    var count = 0;
-    for (let i = 0; i < 10; i++) {
-      if (correctAnswer[i] === answerArray[i]) {
-        count = count + 1;
+      const answerArray = newArray.map((item) =>
+        item.find((ans) => ans !== false)
+      );
+      for (let i = 0; i < 10; i++) {
+        if (correctAnswer[i] === answerArray[i]) {
+          setCount((prev) => prev + 1);
+        }
       }
+      setPlay(true);
     }
-    console.log(count);
   }
 
   if (loading) {
@@ -93,7 +104,7 @@ export default function Question() {
         <div key={quiz.id}>
           <h3>{quiz.question}</h3>
           <br />
-          <div>
+          <div className="options">
             {quiz.answers.map((ans) => (
               <p
                 className={`option  ${ans.isSelected && "selected"}
@@ -109,9 +120,12 @@ export default function Question() {
           <br />
         </div>
       ))}
-      <button className="btn submit" onClick={handleSubmit}>
-        Check answers
-      </button>
+      <div className="submit">
+        {play && <h4>Your Score is {count}/10</h4>}
+        <button className="btn" onClick={handleSubmit}>
+          {play ? "Play Again" : "Check answers"}
+        </button>
+      </div>
     </div>
   );
 }
