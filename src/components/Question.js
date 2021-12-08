@@ -4,7 +4,7 @@ import { nanoid } from "nanoid";
 export default function Question() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
+  const [correctAnswer, setCorrectAnswer] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -18,7 +18,9 @@ export default function Question() {
               .map((item) => ({
                 answer: item,
                 id: nanoid(),
-                isSelected: false
+                isSelected: false,
+                isCorrected: false,
+                isWrong: false
               })),
             correct_answer: ans.correct_answer,
             question: ans.question,
@@ -30,7 +32,11 @@ export default function Question() {
       .finally(setLoading(false));
   }, []);
 
-  console.log(data);
+  useEffect(() => {
+    setCorrectAnswer(data.map((item) => item.correct_answer));
+  }, [data]);
+
+  // console.log(data);
 
   function handleSelect(id, parent_id) {
     setData((prev) => {
@@ -49,6 +55,34 @@ export default function Question() {
     });
   }
 
+  function handleSubmit() {
+    setData((prev) => {
+      return prev.map((item) => ({
+        ...item,
+        answers: item.answers.map((ans, index) => {
+          return ans.answer === item.correct_answer
+            ? { ...ans, isCorrected: !ans.isCorrected, isWrong: ans.isSelected }
+            : { ...ans, isWrong: ans.isSelected };
+        })
+      }));
+    });
+
+    const newArray = data.map((item) =>
+      item.answers.map((ans) => ans.isSelected === true && ans.answer)
+    );
+
+    const answerArray = newArray.map((item) =>
+      item.find((ans) => ans !== false)
+    );
+    var count = 0;
+    for (let i = 0; i < 10; i++) {
+      if (correctAnswer[i] === answerArray[i]) {
+        count = count + 1;
+      }
+    }
+    console.log(count);
+  }
+
   if (loading) {
     return <h1>Data is Loading!</h1>;
   }
@@ -62,7 +96,9 @@ export default function Question() {
           <div>
             {quiz.answers.map((ans) => (
               <p
-                className={`option  ${ans.isSelected && "selected"}`}
+                className={`option  ${ans.isSelected && "selected"}
+                ${ans.isWrong && "wrong"}
+                ${ans.isCorrected && "corrected"}`}
                 key={ans.id}
                 onClick={() => handleSelect(ans.id, quiz.id)}
               >
@@ -73,6 +109,9 @@ export default function Question() {
           <br />
         </div>
       ))}
+      <button className="btn submit" onClick={handleSubmit}>
+        Check answers
+      </button>
     </div>
   );
 }
